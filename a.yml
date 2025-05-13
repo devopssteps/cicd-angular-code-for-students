@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+files:
+  - source: dist/website-project-1
+    destination: /var/www/website1
+permissions:
+  - object: /var/www/website1
+    pattern: '**'
+    mode: '0755'
+    owner: root
+    group: root
+    type:
+      - file
+      - directory
+hooks:
+  ApplicationStart:
+    - location: deploy-scripts/application-start.sh
+      timeout: 300
+      

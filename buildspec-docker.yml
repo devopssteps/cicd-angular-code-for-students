@@ -1,0 +1,27 @@
+version: 0.2
+env:
+  variables:
+    ECR_REPO_NAME: p5
+phases:
+  pre_build:
+    commands:
+      # Docker Login
+      - echo ${DOCKERHUB_TOKEN} | docker login -u ${DOCKERHUB_USER} --password-stdin
+      # ECR Login
+      - ECR_MAIN_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+      #- aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_MAIN_URI}
+      - aws ecr get-login-password --region ap-southeast-1 | docker login -u AWS --password-stdin 123456789.dkr.ecr.ap-southeast-1.amazonaws.com
+
+  build:
+    commands:
+      - docker build -t website-project-1:latest .
+  post_build:
+    commands:
+      # Docker push
+      #- docker tag website-project-1:latest ${DOCKERHUB_USER}/website-project-1:latest
+      #- docker push ${DOCKERHUB_USER}/website-project-1:latest
+      
+      #ECR Push
+      - docker tag website-project-1:latest 123456789.dkr.ecr.ap-southeast-1.amazonaws.com/p5:latest
+      - docker push 123456789.dkr.ecr.ap-southeast-1.amazonaws.com/p5:latest
+      # test1
